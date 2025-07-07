@@ -1,0 +1,546 @@
+@use './fonts.scss';
+
+
+@mixin  media($size) {
+    @media (max-width: #{$size}px) {
+        @content;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat';
+    color: black;
+}
+
+body {
+    background: #f3f3f3;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+// =======================
+// 🎨 Переменные
+// =======================
+$color-bg: #ffffff;
+$color-bg-alt: #f8f9fa;
+$color-text: #333;
+$color-link-hover: #007BFF;
+
+$font-family: 'Montserrat', sans-serif;
+
+$padding-nav: 1rem 2rem;
+$max-width: 1200px;
+$transition-speed: 0.3s;
+
+// =======================
+// 📦 Навигационная панель
+// =======================
+.nav {
+  width: 100%;
+  background-color: $color-bg;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: $padding-nav;
+  font-family: $font-family;
+
+  .container {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  &__box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &__box-list {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__box-list-link {
+    text-decoration: none;
+    color: $color-text;
+    font-weight: 500;
+    position: relative;
+    transition: color $transition-speed ease;
+
+    &:hover {
+      color: $color-link-hover;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 2px;
+        background-color: $color-link-hover;
+      }
+    }
+  }
+}
+
+// =======================
+// 📱 Адаптивность
+// =======================
+@media (max-width: 768px) {
+  .nav__box-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .nav__box {
+    flex-direction: column;
+    align-items: flex-start;
+    align-items: end;
+  }
+}
+
+// 🎨 Переменные
+$color-bg: #ffffff;
+$color-light: #f8f9fa;
+$color-dark: #333;
+$color-primary: #007BFF;
+$color-border: #e0e0e0;
+$color-accent: #ff4d4f;
+
+$font-family: 'Montserrat', sans-serif;
+
+$transition-speed: 0.3s;
+$max-width: 1200px;
+
+// 🧱 Продукты
+.products {
+  padding: 7rem 1rem 3rem; // учтён фиксированный navbar
+  background-color: $color-light;
+  font-family: $font-family;
+.container {
+    max-width: $max-width;
+    margin: 0 auto;
+  }
+&__sort {
+    display: flex;
+    justify-content: end;
+
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    &-box,
+    &-searchBox {
+      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      gap: 0.5rem;
+
+      span {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $color-dark;
+      }
+    }
+
+    &-box-select,
+    &-searchBox-search {
+      padding: 0.6rem 1rem;
+      border: 1px solid $color-border;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border $transition-speed;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+      }
+    }
+  }
+  &__box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    direction: rtl;
+    &-item {
+      background-color: $color-bg;
+      border: 1px solid $color-border;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+      transition: transform $transition-speed;
+       direction: ltr; // 👈 отменяет для самих карточек, чтобы внутри всё оставалось по-русски
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      // 🔹 ОБЁРТКА ДЛЯ ИЗОБРАЖЕНИЯ
+      &-imgBox {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+        }
+
+        h3 {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: $color-dark;
+          padding: 10px;
+          text-align: center;
+        }
+      }
+
+      // 🔹 ОБЁРТКА ДЛЯ ТЕКСТА + СКИДКИ
+      &-discountBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+
+      &-discount {
+        background-color: $color-accent;
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        align-self: flex-start;
+      }
+
+      &-text {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        &-description,
+        &-stock,
+        &-price,
+        &-discountPrice {
+          font-size: 0.95rem;
+          color: $color-dark;
+        }
+
+        &-discountPrice {
+          color: $color-accent;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // 🔹 Media адаптация
+  @media (max-width: 560px) {
+    .products__box-item-discountBox {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .products__box-item {
+      justify-content: space-between;
+    }
+  }
+}
+.products__sort-title{
+  font-size: 80px;
+  font-weight: 6000;
+  color: $color-dark;
+
+}
+.products__pagination {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  min-height: 64px; // ✅ фиксирует высоту
+  padding: 1rem 0;
+
+  &-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid $color-border;
+    background-color: $color-bg;
+    color: $color-dark;
+    border-radius: 6px;
+    transition: background-color $transition-speed;
+    min-width: 80px;
+
+    &:hover:not(:disabled) {
+      background-color: $color-primary;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &-list {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+
+    &-link {
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      border: 1px solid $color-border;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color $transition-speed;
+
+      &.active {
+        background-color: $color-primary;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      &:hover:not(.active) {
+        background-color: $color-light;
+      }
+    }
+  }
+}
+
+
+
+.cort {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+
+  @media (max-width: 320px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 0.4rem;
+    justify-items: center;
+    width: 100%;
+  }
+
+  &-link {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: 1px solid $color-border;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 44px;
+    text-align: center;
+
+    &.active {
+      background-color: $color-primary;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    &:hover:not(.active) {
+      background-color: $color-light;
+    }
+  }
+}
+
+
+// 🎨 Переменные
+$color-bg: #ffffff;
+$color-light: #f8f9fa;
+$color-dark: #333;
+$color-primary: #007BFF;
+$color-accent: #ff4d4f;
+$color-border: #e0e0e0;
+
+$font-family: 'Montserrat', sans-serif;
+$transition-speed: 0.3s;
+
+.product__box {
+  display: flex;
+  gap: 2rem;
+  background-color: $color-light;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  font-family: $font-family;
+  flex-wrap: wrap;
+
+ 
+
+ 
+}
+
+
+
+// 📱 Адаптивность до 768px
+@media (max-width: 768px) {
+  .product__box {
+    padding: 1.5rem;
+  }
+
+  .product__box-description {
+    &-title {
+      font-size: 1.6rem;
+    }
+
+    &-discountPrice {
+      font-size: 1.2rem;
+    }
+  }
+
+  .product__box-images-slide .product__box-slider-img {
+    max-height: 300px;
+  }
+}
+
+// 📱 Адаптивность до 320px
+@media (max-width: 560px) {
+  .product__box {
+    padding: 1rem;
+    gap: 1.2rem;
+  }
+
+  .product__box-description {
+    gap: 0.7rem;
+
+    &-title {
+      font-size: 1.4rem;
+    }
+
+    &-about,
+    &-stock,
+    &-price,
+    &-discountPrice {
+      font-size: 0.9rem;
+    }
+
+    &-discountPrice {
+      font-size: 1.1rem;
+    }
+  }
+
+  .product__box-images-slide .product__box-slider-img {
+    max-height: 200px;
+  }
+}
+
+// 📱 Адаптивность
+@media (max-width: 768px) {
+  .products__sort {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .products__box-item-img {
+   width: 150px;
+  height: 150px;
+  object-fit: cover; // или contain
+  overflow: hidden;
+  border-radius: 8px;
+  }
+}
+@media (max-width: 620px) {
+  .products {
+    padding: 6rem 0.5rem 2rem;
+
+    &__sort {
+      flex-direction: column;
+      gap: 1rem;
+
+      &-box,
+      &-searchBox {
+        span {
+          font-size: 0.9rem;
+        }
+
+        select,
+        input {
+          font-size: 0.9rem;
+          padding: 0.4rem 0.8rem;
+        }
+      }
+    }
+
+    &__sort-title {
+      font-size: 1.5rem;
+    }
+
+    &__box {
+      gap: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 5fr));
+
+      &-item {
+        
+        &-img {
+          height: 140px;
+        }
+
+        &-text {
+          padding: 0.7rem;
+          gap: 0.3rem;
+
+          &-title {
+            font-size: 1rem;
+          }
+
+          &-description,
+          &-stock,
+          &-price,
+          &-discountPrice {
+            font-size: 0.85rem;
+          }
+
+          &-btn {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.7rem;
+          }
+        }
+      }
+    }
+
+    &__pagination {
+      gap: 0.6rem;
+
+      &-btn {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.7rem;
+      }
+
+      &-list-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
+      }
+    }
+  }
+
+}
+
+ .swiper-pagination-bullets {
+    opacity: 0;
+}
