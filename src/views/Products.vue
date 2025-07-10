@@ -1,37 +1,34 @@
 <template>
-    <div class="products">
-        <div class="container">
-            <div class="top"></div>
-            <h2 class="products__sort-title">Товары</h2>
+  <div class="products">
+    <div class="container">
+      <div class="top"></div>
+      <h2 class="products__sort-title">Товары</h2>
 
-            
-            <div class="products__sort">
-                <div class="products__sort-box">
-                    <span>Сортировка</span>
-                    <select v-model="sortType" class="products__sort-box-select">
-                        <option class="option" value="Название">Название</option>
-                        <option class="option" value="Цена">Цена</option>
-                        <option class="option" value="Кол-во">Кол-во</option>
-                    </select>
-                </div>
-                <div class="products__sort-searchBox" style="display: flex">
-                    <span>Поиск</span>
-                    <input 
-                    type="text" 
-                    class="products__sort-searchBox-search"
-                    placeholder="Поиск"
-                    v-model="search"
-                    >
-                </div>
-            </div>
-            <div class="products__box" v-if="products">
- <Card
-  v-for="(product, index) in sortedProducts" :key="index" :product="product" 
-/>
+      <!-- Сортировка и Поиск -->
+      <div class="products__sort">
+        <div class="products__sort-searchBox" style="display: flex">
+          <span>Поиск</span>
+          <input
+            type="text"
+            class="products__sort-searchBox-search"
+            placeholder="Поиск"
+            v-model="search"
+          />
+        </div>
+      </div>
 
-            </div>
-            <Loader v-else/>
-            <div class="products__pagination " >
+      <!-- Товары -->
+      <div class="products__box" v-if="sortedProducts.length">
+        <Card
+          v-for="product in paginatedProducts"
+          :key="product.id"
+          :product="product"
+        />
+      </div>
+      <Loader v-else />
+
+      <!-- Пагинация -->
+      <div class="products__pagination " >
                 <button class="products__pagination-btn" @click="prevPage()" :disabled="currentPage === 1">Назад</button>
                 <ul class="products__pagination-list cort">
                     <li 
@@ -46,8 +43,8 @@
                 </ul>
                 <button class="products__pagination-btn" @click="nextPage()" :disabled="currentPage === totalPages">Вперед</button>
             </div>
-        </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -56,83 +53,49 @@ import _debounce from 'lodash/debounce'
 import Card from '@/components/Cards.vue'
 import { productsStore } from '@/stores/productsStore.js'
 
-
 const store = productsStore()
+onMounted(() => store.getProducts())
 
-
-
-onMounted(() => {
-  store.getProducts()
-})
-
-
-// Доступ к товарам (по умолчанию пусть будет [] вместо null)
-const products = computed(() => store.products || [])
-
-// Поиск
 const search = ref('')
-const applyFilter = ref(false)
+const sortType = ref('Название')
+const currentPage = ref(1)
+const productsPerPage = 4
+
 const filteredProducts = computed(() => {
-  if (!search.value) return products.value
-  return products.value.filter(p =>
-    p.title?.toLowerCase().includes(search.value.toLowerCase())
+  const term = search.value.toLowerCase()
+  return store.products.filter(p =>
+    p.title?.toLowerCase().includes(term)
   )
 })
 
-// Реакция на поиск
-watch(search, _debounce((newVal) => {
-  applyFilter.value = newVal !== ''
-  if (applyFilter.value) {
-    filteredProducts.value = products.value.filter(p =>
-      p.title?.toLowerCase().includes(newVal.toLowerCase())
-    )
-  } else {
-    filteredProducts.value = []
-  }
-  currentPage.value = 1
-}, 300))
-
-// Пагинация
-const productsPerPage = ref(5)
-const currentPage = ref(1)
-
-const totalPages = computed(() => {
-  const list = applyFilter.value ? filteredProducts.value : products.value
-  return Math.ceil(list.length / productsPerPage.value)
-})
-
-// Сортировка + пагинация
-const sortType = ref('Название')
-
 const sortedProducts = computed(() => {
-  const list = applyFilter.value ? filteredProducts.value : products.value
-  const sorted = [...list]
-
+  const sorted = [...filteredProducts.value]
   if (sortType.value === 'Название') {
     sorted.sort((a, b) => a.title.localeCompare(b.title))
   } else if (sortType.value === 'Цена') {
     sorted.sort((a, b) => a.price - b.price)
-  } else if (sortType.value === 'Кол-во') {
-    sorted.sort((a, b) => a.stock - b.stock)
   }
-
-  const start = (currentPage.value - 1) * productsPerPage.value
-  const end = start + productsPerPage.value
-
-  return sorted.slice(start, end)
+  return sorted
 })
 
-// Переключение страниц
-const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--
-}
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++
-}
-const goToPage = (page) => {
-  currentPage.value = page
-}
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * productsPerPage
+  return sortedProducts.value.slice(start, start + productsPerPage)
+})
 
+const totalPages = computed(() => {
+  return Math.ceil(sortedProducts.value.length / productsPerPage)
+})
 
+const goToPage = (page) => currentPage.value = page
+const prevPage = () => currentPage.value > 1 && currentPage.value--
+const nextPage = () => currentPage.value < totalPages.value && currentPage.value++
 
+watch(search, _debounce(() => {
+  currentPage.value = 1
+}, 300))
 </script>
+
+<style scoped>
+/* Добавьте стили по необходимости */
+</style>
