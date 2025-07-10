@@ -1,13 +1,15 @@
 <template>
-  <div style="margin-top: 100px; margin-bottom: 100px; display: flex; justify-content: center; align-items: center; flex-direction: column"><div class="checkout container" style="margin:auto;" v-if="productsStore">
-    <h2 style="margin-bottom: 20px">Оформление заказа</h2>
-    <form @submit.prevent="submitOrder" class="checkout__form">
-      <input v-model="form.name" placeholder="Имя" required />
-      <input v-model="form.phone" placeholder="Телефон для связи" required />
-      <textarea v-model="form.address" placeholder="Адрес доставки" required></textarea>
-      <button type="submit">Подтвердить заказ</button>
-    </form>
-  </div></div>
+  <div style="margin-top: 100px; margin-bottom: 100px; display: flex; justify-content: center; align-items: center; flex-direction: column">
+    <div class="checkout container" style="margin:auto;" v-if="productsStore">
+      <h2 style="margin-bottom: 20px">Оформление заказа</h2>
+      <form @submit.prevent="submitOrder" class="checkout__form">
+        <input v-model="form.name" placeholder="Имя" required />
+        <input v-model="form.phone" placeholder="Телефон для связи" required />
+        <textarea v-model="form.address" placeholder="Адрес доставки" required></textarea>
+        <button type="submit">Подтвердить заказ</button>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -30,30 +32,46 @@ const submitOrder = async () => {
   loading.value = true
 
   try {
+    // Очищаем корзину от лишних полей
+    const cleanCart = cart.cartItems.map(item => ({
+      title: item.title,
+      price: item.price,
+      amount: item.amount
+    }))
+
     const order = {
       name: form.name,
       phone: form.phone,
       address: form.address,
-      cart: cart.cartItems
+      cart: cleanCart
     }
 
-    const response = await fetch('https://my-fastapi-backend-2.onrender.com/api/order', {
+    console.log("📦 Отправка заказа:", order)
+
+    const response = await fetch('https://my-backend-449o.onrender.com/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
     })
 
-    if (!response.ok) throw new Error()
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error("Ответ сервера:", errorText)
+      throw new Error("Ошибка при отправке заказа")
+    }
 
     alert('✅ Заказ отправлен!')
     cart.cartItems = []
-  } catch {
-    alert('❌ Ошибка! Попробуйте позже.')
+    form.name = ''
+    form.phone = ''
+    form.address = ''
+  } catch (error) {
+    console.error("Ошибка при заказе:", error)
+    alert('❌ Ошибка при заказе. Подробности в консоли.')
   } finally {
     loading.value = false
   }
 }
-
 </script>
 
 <style scoped>
