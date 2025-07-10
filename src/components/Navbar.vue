@@ -29,16 +29,16 @@ const links = ref([{ url: "/", name: "Товары"
 
 
 
-const handleClickOutside = (e) => {
-  if (wrapper.value && !wrapper.value.contains(e.target)) {
-    isOpen.value = false;
-  }
-};
+// const handleClickOutside = (e) => {
+//   if (wrapper.value && !wrapper.value.contains(e.target)) {
+//     isOpen.value = false;
+//   }
+// };
 
-onMounted(() => document.addEventListener("click", handleClickOutside));
-onBeforeUnmount(() =>
-  document.removeEventListener("click", handleClickOutside)
+// onMounted(() => document.addEventListener("click", handleClickOutside));
+// onBeforeUnmount(() =>
+//   document.removeEventListener("click", handleClickOutside)
 
-);
+// );
 //автоматическое закрытие  корзины при клике вне нее
 </script>

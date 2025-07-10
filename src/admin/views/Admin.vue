@@ -10,13 +10,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import ProductList from '../components/ProductList.vue'
 import ProductForm from '../components/ProductForm.vue'
-import { useAdminProductsStore } from '../store/adminProductsStore'
+import { useAdminProductsStore } from '../store/adminProductsStore.js'
 
 const store = useAdminProductsStore()
-const products = store.products
+const products = computed(() => store.products)
 
 const editedProduct = ref(null)
 
@@ -28,7 +28,11 @@ const handleSave = (product) => {
   if (product.id) {
     store.updateProduct(product)
   } else {
-    product.id = Date.now()
+    let id = Date.now()
+    while (products.value.find(p => p.id === id)) {
+      id += Math.floor(Math.random() * 1000)
+    }
+    product.id = id
     store.addProduct(product)
   }
   editedProduct.value = null
@@ -42,8 +46,9 @@ const deleteProduct = (id) => {
   if (confirm('Удалить товар?')) store.deleteProduct(id)
 }
 
-const saveProducts = () => {
-  store.saveProducts()
+const saveProducts = async () => {
+  await store.saveProducts()
+  await store.fetchProducts()
 }
 </script>
 

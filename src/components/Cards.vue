@@ -39,7 +39,6 @@ const formatPrice = (value) =>
     <!-- Информация -->
     <div class="products__box-item-text">
       <p><strong>Бренд:</strong> {{ product.brand || 'Не указан' }}</p>
-      <p><strong>В наличии:</strong> {{ product.stock || '—' }}</p>
       <p><strong>Цена:</strong> {{ formatPrice(product.price) }} сум</p>
       <p v-if="product.discountPercentage > 0">
         <strong>Со скидкой:</strong>
