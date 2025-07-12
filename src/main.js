@@ -13,6 +13,8 @@ app.use(pinia)
 app.use(router)
 
 import Loader from '@/components/Loader.vue'
+import Produc from '../src/views/Products.vue'
+app.component('Productak', Produc)
 app.component('Loader', Loader)
 
 app.mount('#app')

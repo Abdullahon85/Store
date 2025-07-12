@@ -7,7 +7,7 @@ export const useAdminProductsStore = defineStore('adminProducts', () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('https://my-backend-449o.onrender.com/api/products')
+      const res = await axios.get('https://my-fastapi-wjrk.onrender.com/api/products')
       products.value = res.data
     } catch (err) {
       console.error('Ошибка загрузки товаров:', err)
@@ -16,7 +16,7 @@ export const useAdminProductsStore = defineStore('adminProducts', () => {
 
   const saveProducts = async () => {
     try {
-      await axios.post('https://my-backend-449o.onrender.com/api/products', products.value)
+      await axios.post('https://my-fastapi-wjrk.onrender.com/api/products', products.value)
       alert('✅ Товары успешно сохранены')
     } catch (err) {
       console.error('Ошибка при сохранении товаров:', err)
