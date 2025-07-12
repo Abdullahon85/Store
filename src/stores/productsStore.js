@@ -6,7 +6,7 @@ export const productsStore = defineStore('products', () => {
   let products = ref([])
   const getProducts = async () => {
     try {
-      let response = await axios.get(`https://my-fastapi-wjrk.onrender.com/api/products`)
+      let response = await axios.get(`https://my-backend-db1c.onrender.com/api/products`)
       products.value = response.data
       // console.log(products.value);
     } catch (error) {

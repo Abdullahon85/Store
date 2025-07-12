@@ -35,7 +35,7 @@ const submitOrder = async () => {
       cart: cart.cartItems
     }
 
-    const res = await fetch('https://my-fastapi-wjrk.onrender.com/api/order', {
+    const res = await fetch('https://my-backend-db1c.onrender.com/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(order)
