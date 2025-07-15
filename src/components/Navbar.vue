@@ -18,13 +18,12 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount,  } from "vue";
-import cartIcon from '/public/images/icons8-shopping-cart-48.png'
 import { cartStore } from '@/stores/cartStore'
 
 const cart = cartStore()
 
 const links = ref([{ url: "/", name: "Товары"
-  }, { url: "/cart", name: "Корзина", img: cartIcon
+  }, { url: "/cart", name: "Корзина",
  }]);
 
 
